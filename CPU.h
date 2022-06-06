@@ -10,7 +10,7 @@
 
 #include <avr/io.h>		/* Include AVR std. library file */
 #include <avr/interrupt.h>
-#include <util/delay.h>	/* Include Delay header file */
+#include <util/delay.h>		/* Include Delay header file */
 
 #ifdef F_CPU
 #undef F_CPU
