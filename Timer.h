@@ -25,15 +25,15 @@ typedef enum{
 }TIMER0_MODE;
 
 typedef enum{
-	DISABLE,TOGGLE, SET, CLEAR
+	DISABLE, TOGGLE, CLEAR, SET
 }PIN_OPERATION;
 
 typedef enum{
-	NO_CLOCK, P0, P8, P64, P256, P1024
+	NO_CLOCK, P1 , P8, P64, P256, P1024, EXTERNAL_FALLING, EXTERNAL_RISING
 }CLOCK_SOURCE;
 
 typedef enum{
-	ENABLE_INTERRUPT, DISABLE_INTERRUPT
+	DISABLE_INTERRUPT, ENABLE_INTERRUPT
 }TIMER0_INTERRUPT_STATE;
 
 
@@ -41,8 +41,8 @@ typedef struct{
 	TIMER0_MODE 			mode;
 	PIN_OPERATION 			pin_mode;
 	CLOCK_SOURCE			clock_select;
-	uint8 					starting_time;
-	uint8 					compare_val;
+	uint8 					starting_ticks;
+	uint8 					compare_time;
 	TIMER0_INTERRUPT_STATE	interrupt_select;
 }TIMER0_CONFIGURATION;
 
@@ -61,19 +61,14 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR);
  *
  *
  */
-void Timer0_start(void);
-
-/* Description:
- *
- *
- */
 uint8 Timer0_checkFlag(void);
 
+
 /* Description:
  *
  *
  */
-void Timer0_stop(void);
+void Timer0_clearFlag(void);
 
 /* Description:
  *
@@ -85,9 +80,6 @@ void Timer0_deinit(void);
  *
  *
  */
-
-
-
 void TIMER0_setCallBack(void(*a_ptr)(void));
 
 #endif /* TIMER_H_ */
