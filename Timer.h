@@ -14,6 +14,8 @@
 
 #include "std_types.h"
 #include "CPU.h"
+#include <avr/io.h>
+#include "Register_Macros.h"
 
 /*******************************************************************************
  *                          	  Type Declaration                             *
@@ -23,19 +25,25 @@ typedef enum{
 }TIMER0_MODE;
 
 typedef enum{
-	TOGGLE, SET, CLEAR
+	DISABLE,TOGGLE, SET, CLEAR
 }PIN_OPERATION;
 
 typedef enum{
 	NO_CLOCK, P0, P8, P64, P256, P1024
 }CLOCK_SOURCE;
 
+typedef enum{
+	ENABLE_INTERRUPT, DISABLE_INTERRUPT
+}TIMER0_INTERRUPT_STATE;
+
 
 typedef struct{
-	TIMER0_MODE 	mode;
-	PIN_OPERATION 	PIN_MODE;
-	uint8 			starting_time;
-	uint8 			compare_val;
+	TIMER0_MODE 			mode;
+	PIN_OPERATION 			pin_mode;
+	CLOCK_SOURCE			clock_select;
+	uint8 					starting_time;
+	uint8 					compare_val;
+	TIMER0_INTERRUPT_STATE	interrupt_select;
 }TIMER0_CONFIGURATION;
 
 
@@ -53,7 +61,13 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR);
  *
  *
  */
-void Timer0_start(CLOCK_SOURCE source);
+void Timer0_start(void);
+
+/* Description:
+ *
+ *
+ */
+uint8 Timer0_checkFlag(void);
 
 /* Description:
  *
@@ -71,6 +85,9 @@ void Timer0_deinit(void);
  *
  *
  */
+
+
+
 void TIMER0_setCallBack(void(*a_ptr)(void));
 
 #endif /* TIMER_H_ */
