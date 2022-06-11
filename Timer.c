@@ -36,7 +36,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			TIMSK0= ENABLE_INTERRUPT;
+			TIMSK0= 0x01;
 	}
 
 	/****************************************
@@ -58,7 +58,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			TIMSK0= ENABLE_INTERRUPT;
+			TIMSK0= 0x02;
 	}
 
 	/****************************************
@@ -77,7 +77,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
 		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			TIMSK0= ENABLE_INTERRUPT;
+			TIMSK0= 0x02;
 	}
 
 }
@@ -91,4 +91,41 @@ void Timer0_start(CLOCK_SOURCE clk)
 
 			TCCR0B |= clk;
 
+}
+
+/* Description:
+ *
+ *
+void Timer0_stop(void)
+{
+	TCCR0B &= ~(0x07);
+}
+
+
+
+/* Description:
+ *
+ *
+ */
+uint8 Timer0_checkFlag(void)
+{
+	return TIFR0;
+}
+
+/* Description:
+ *
+ *
+ */
+void Timer0_clearFlag(void)
+{
+	TIFR0= 0x07;
+}
+
+/* Description:
+ *
+ *
+ */
+void TIMER0_setCallBack(void(*a_ptr)(void))
+{
+	g_callBackPtr = a_ptr;
 }
