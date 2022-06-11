@@ -1,20 +1,18 @@
 
 
-#include "Servo_Motor.h"
+#include "Timer.h"
 #include "Register_Macros.h"
 
 int main (void)
 {
-	DDRD |= (1<<PD5);	/* Make OC1A pin as output */
+	DDRC = 0x01;
+	Timer0_init(OVERFLOW_MODE, DISABLE, 10, 0, DISABLE_INTERRUPT);
+	Timer0_start(P1024);
 
 	while(1)
 	{
-		Timer1_Fast_PWM_Init(124);	/* Set Servo shaft at 0° position by 1 ms pulse */
-		_delay_ms(1500);
-		Timer1_Fast_PWM_Init(187);	/* Set Servo shaft at 90° position by 1.5 ms pulse */
-		_delay_ms(1500);
-		Timer1_Fast_PWM_Init(250);	/* Set Servo shaft at 180° position by 2 ms pulse */
-		_delay_ms(1500);
+		while(!Timer0_checkFlag());
+		TOGGLE_BIT(PORTC,1);
+		Timer0_clearFlag();
 	}
-	return 0;
 }
