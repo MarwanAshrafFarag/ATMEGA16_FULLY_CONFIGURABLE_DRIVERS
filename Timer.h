@@ -16,6 +16,7 @@
 #include "CPU.h"
 #include <avr/io.h>
 #include "Register_Macros.h"
+#include <avr/interrupt.h>
 
 /*******************************************************************************
  *                          	  Type Declaration                             *
