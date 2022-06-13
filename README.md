@@ -1,2 +1,2 @@
-# Ball Balancing Project Repo
- Repository for the Ball Balancing PID Project
+# ATMEGA16 FULLY CONFIGURABLE DRIVERS Project Repo
+ Repository for the ATMEGA16 FULLY CONFIGURABLE DRIVERS Project
