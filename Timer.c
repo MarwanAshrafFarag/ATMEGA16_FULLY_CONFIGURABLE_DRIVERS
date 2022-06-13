@@ -40,7 +40,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			TIMSK0= 0x01;
+			SET_BIT(TIMSK0, TOIE0);
 	}
 
 	/****************************************
@@ -62,7 +62,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			TIMSK0= 0x02;
+			SET_BIT(TIMSK0, OCIE0A);
 	}
 
 	/****************************************
@@ -81,7 +81,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
 		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			TIMSK0= 0x02;
+			SET_BIT(TIMSK0, OCIE0A);
 	}
 
 }
