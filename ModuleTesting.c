@@ -2,13 +2,15 @@
 
 #include "Timer.h"
 
-#define OVERFLOW_MODE_INTERRUPT_ENABLED
+#define CTC_MODE_INTERRUPT_ENABLED
 
 /****************************************
  * 										*
  *  OVERFLOW MODE, INTERRUPT DISABLED	*
  *                                      *
  ***************************************/
+
+/* The purpose of the following test is to validate the behavior of the functions used in polling _checkFlag and _clearFlag*/
 
 #ifdef OVERFLOW_MODE_INTERRUPT_DISABLED
 
@@ -64,8 +66,35 @@ int main (void)
 	while(1)
 	{
 
-
 	}
+}
+
+#endif
+
+/****************************************
+ * 										*
+ * 	  CTC MODE, INTERRUPT ENABLED		*
+ *                                      *
+ ***************************************/
+
+#ifdef CTC_MODE_INTERRUPT_ENABLED
+
+ISR(TIMER0_COMPA_vect)
+{
+	TOGGLE_BIT(PORTC,PC1);
+}
+
+
+
+int main(void)
+{
+	TIMER0_CONFIGURATION Timer_configStr={CTC_MODE,  TOGGLE, 0,128, ENABLE_INTERRUPT};
+		Timer0_init(&Timer_configStr);
+		Timer0_start(P1024);
+		while(1)
+		{
+
+		}
 }
 
 #endif
