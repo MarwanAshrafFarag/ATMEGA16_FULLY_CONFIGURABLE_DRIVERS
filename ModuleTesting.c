@@ -2,8 +2,11 @@
 
 #include "Timer.h"
 
-#define CTC_MODE_INTERRUPT_ENABLED
-
+//#define OVERFLOW_MODE_INTERRUPT_DISABLED
+//#define OVERFLOW_MODE_INTERRUPT_ENABLED
+//#define CTC_MODE_TOGGLE_PIN
+#define PWM_MODE_CLEAR
+#define PWM_MODE_SET
 /****************************************
  * 										*
  *  OVERFLOW MODE, INTERRUPT DISABLED	*
@@ -16,10 +19,10 @@
 
 int main (void)
 {
-	TIMER0_CONFIGURATION Timer_configStr={OVERFLOW_MODE, DISABLE, 0,0, DISABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr={OVERFLOW_MODE, DISABLE, 0,0,P1024, DISABLE_INTERRUPT};
 	Timer0_init(&Timer_configStr);
 	static uint8 OVFcounter = 0;
-	Timer0_start(P1024);
+	Timer0_start();
 
 	while(1)
 	{
@@ -58,10 +61,10 @@ ISR (TIMER0_OVF_vect)
 
 int main (void)
 {
-	TIMER0_CONFIGURATION Timer_configStr = {OVERFLOW_MODE, DISABLE, 0,0, ENABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr = {OVERFLOW_MODE, DISABLE, 0,0,P256, ENABLE_INTERRUPT};
 	Timer0_init(&Timer_configStr);
 	sei();
-	Timer0_start(P1024);
+	Timer0_start();
 
 	while(1)
 	{
@@ -77,7 +80,7 @@ int main (void)
  *                                      *
  ***************************************/
 
-#ifdef CTC_MODE_INTERRUPT_ENABLED
+#ifdef CTC_MODE_TOGGLE_PIN
 
 ISR(TIMER0_COMPA_vect)
 {
@@ -88,13 +91,36 @@ ISR(TIMER0_COMPA_vect)
 
 int main(void)
 {
-	TIMER0_CONFIGURATION Timer_configStr={CTC_MODE,  TOGGLE, 0,128, ENABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr={CTC_MODE, TOGGLE, 0,128,P8, ENABLE_INTERRUPT};
 		Timer0_init(&Timer_configStr);
-		Timer0_start(P1024);
+		Timer0_start();
 		while(1)
 		{
 
 		}
 }
+
+#endif
+
+#ifdef PWM_MODE_CLEAR
+
+ISR(TIMER0_COMPA_vect)
+{
+	TOGGLE_BIT(PORTC,PC1);
+}
+
+
+
+int main(void)
+{
+	TIMER0_CONFIGURATION Timer_configStr={FAST_PWM_MODE, TOGGLE, 0,50,P64, ENABLE_INTERRUPT};
+		Timer0_init(&Timer_configStr);
+		Timer0_start();
+		while(1)
+		{
+
+		}
+}
+
 
 #endif

@@ -52,14 +52,21 @@ typedef enum{
 
 
 /**Configuration structure for TIMER0A**/
+
 typedef struct{
 	TIMER0_MODE 			mode;
 	PIN_OPERATION 			pin_mode;
 	uint8 					starting_ticks;
-	uint8 					compare_time;
+	uint8 					compare_time;	/* This member is used to hold the duty cycle during FAST_PWM_MODE*/
+	CLOCK_SOURCE			clk;
 	TIMER0_INTERRUPT_STATE	interrupt_select;
 }TIMER0_CONFIGURATION;
 
+/*******************************************************************************
+ *                            Variable Declaration                             *
+ ******************************************************************************/
+
+static volatile CLOCK_SOURCE clk_holder = 0;
 
 /*******************************************************************************
  *                          Function Definitions                               *
@@ -78,15 +85,13 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR);
  *Function to start the timer by setting the appropriate clock source
  *Returns nothing as it only sets the appropriate bits
  */
-void Timer0_start(CLOCK_SOURCE clk);
+void Timer0_start();
 
 /* Description:
  * Function to use in case of polling
  * Returns the status of the interrupt flag register
  */
 uint8 Timer0_checkFlag(void);
-
-
 
 /* Description:
  *Clears the interrupt flags by setting them to 1

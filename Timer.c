@@ -37,7 +37,9 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		TCCR0A = 0;
 		TCCR0B = 0;
 		SET_BIT(TCCR0B, FOC0A);
-		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
+		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
+
+
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, TOIE0);
 	}
@@ -52,13 +54,9 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		// RESETTING CONTROL REGISTERS
 		TCCR0A=0;
 		TCCR0B = 0;
-
 		SET_BIT(TCCR0A, WGM01);							// SET WAVEFORM GENERATION TO CTC MDOE
-		TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode; 	// SET OCR0A BEHAVIOR
 		SET_BIT(TCCR0B, FOC0A);							// SETTING FOC0A DURING NON PWM MODE
-
-		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
-		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
+		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, OCIE0A);
@@ -72,29 +70,33 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 	{
 		TCCR0A=0;
 		TCCR0B=0;
-
 		SET_BIT(TCCR0A, WGM00); SET_BIT(TCCR0A, WGM01); SET_BIT(TCCR0B, WGM02);
+		if(TIMER0_CONFIGURATION_PTR->compare_time > 100)
+			OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
 
-		TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode; // OCR0A pin mode
+		else
+			OCR0A = (uint8)(((50)*(TIMER0_CONFIGURATION_PTR->compare_time))/100);
 
-		TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;
-		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, OCIE0A);
 	}
 
+	TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode; 		// OCR0A pin mode
+	TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;	// The ticks at which the timer starts
+	clk_holder = TIMER0_CONFIGURATION_PTR->clk;
 }
 
 /* Description:
  * Function to start the timer by setting the appropriate clock source
  * Returns nothing as it only sets the appropriate bits
  */
-void Timer0_start(CLOCK_SOURCE clk)
+void Timer0_start()
 {
 
-			TCCR0B |= clk;
+			TCCR0B |= clk_holder;
 
 }
+
 
 /* Description:
  * Stops the timer by clearing the appropriate clock select bits
