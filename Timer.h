@@ -12,11 +12,9 @@
  *                          	   File Inclusions                             *
  *******************************************************************************/
 
-#include "std_types.h"
+
 #include "CPU.h"
-#include <avr/io.h>
-#include "Register_Macros.h"
-#include <avr/interrupt.h>
+
 
 /*******************************************************************************
  *                          	  Type Declaration                             *
@@ -85,8 +83,8 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR);
  *Function to start the timer by setting the appropriate clock source
  *Returns nothing as it only sets the appropriate bits
  */
-void Timer0_start();
 
+void Timer0_start();
 /* Description:
  * Function to use in case of polling
  * Returns the status of the interrupt flag register

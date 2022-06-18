@@ -13,16 +13,17 @@ typedef unsigned char boolean;
 
 /* Boolean Values */
 #ifndef FALSE
-#define FALSE       (0u)
+#define FALSE       	(0u)
 #endif
 #ifndef TRUE
-#define TRUE        (1u)
+#define TRUE        	(1u)
 #endif
 
-#define LOGIC_HIGH        (1u)
-#define LOGIC_LOW         (0u)
+#define LOGIC_HIGH      (1u)
+#define LOGIC_LOW       (0u)
 
-#define NULL_PTR    ((void*)0)
+
+#define NULL_PTR      ((void*)0)
 
 typedef unsigned char         uint8;          /*           0 .. 255              */
 typedef signed char           sint8;          /*        -128 .. +127             */

@@ -37,8 +37,6 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		TCCR0A = 0;
 		TCCR0B = 0;
 		SET_BIT(TCCR0B, FOC0A);
-		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
-
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, TOIE0);
@@ -57,6 +55,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 		SET_BIT(TCCR0A, WGM01);							// SET WAVEFORM GENERATION TO CTC MDOE
 		SET_BIT(TCCR0B, FOC0A);							// SETTING FOC0A DURING NON PWM MODE
 		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
+		TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode; 	// OCR0A pin mode
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, OCIE0A);
@@ -75,13 +74,13 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 			OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
 
 		else
-			OCR0A = (uint8)(((50)*(TIMER0_CONFIGURATION_PTR->compare_time))/100);
+			OCR0A = (uint8)(((255)*(TIMER0_CONFIGURATION_PTR->compare_time))/100);
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, OCIE0A);
 	}
 
-	TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode; 		// OCR0A pin mode
+
 	TCNT0 = TIMER0_CONFIGURATION_PTR->starting_ticks;	// The ticks at which the timer starts
 	clk_holder = TIMER0_CONFIGURATION_PTR->clk;
 }
@@ -92,9 +91,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
  */
 void Timer0_start()
 {
-
-			TCCR0B |= clk_holder;
-
+		TCCR0B |= clk_holder;
 }
 
 
