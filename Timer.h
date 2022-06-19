@@ -29,7 +29,7 @@ typedef enum{
 
 /**Behavior of OCR0A PIN**/
 typedef enum{
-	DISABLE, TOGGLE= 0x40, CLEAR=0x80, SET=0xc0
+	DISABLE, TOGGLE= 0x40, CLEAR=0x80, SET=0xC0
 }PIN_OPERATION;
 
 

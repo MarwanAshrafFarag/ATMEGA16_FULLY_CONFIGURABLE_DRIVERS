@@ -18,26 +18,33 @@ void (*g_callBackPtr)(void) = NULL_PTR;
  *                          Function Definitions                               *
  *******************************************************************************/
 
-/* Description:
- * Function to configure the use of TIMER0A
- * Its argument is pointer to the configuration structure that has 5 members
- * the function returns nothing
- * It only sets the appropriate bits in the timer registers based on the user configurations
- *  Function doesnt start the timer
+/* Description: Function to configure the use of TIMER0
+ * Arguments: Pointer to the TIMER0_CONFIGURATION structure
+ * Return: Function returns nothing
  */
 void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 {
+	/* RESETTING The control and interrupt bits before configuring */
+	TCCR0A = 0;
+	TCCR0B = 0;
+	TIMSK0 = 0;
 
 	/****************************************
 	 *			NORMAL OVERFLOW MODE		*
 	 ****************************************/
-
+	/************************************************************************
+	 * All Waveform Generation Mode bits are set to 0						*
+	 * Setting Force output compare bit for non PWM modes					*
+	 * This mode does not utilize OCx pin, so it should be always disabled	*
+	 * This mode does not utilize the OCRx register							*
+	 * Any configuration regarding output compare will be discarded			*
+	 * Setting TOIE0 bit in case the configuration required the interrupt   *
+	 ************************************************************************/
 	if(TIMER0_CONFIGURATION_PTR->mode == OVERFLOW_MODE)
 	{
-		TCCR0A = 0;
-		TCCR0B = 0;
+		// Setting Waveform Generation Mode and Compare Output Mode bits
 		SET_BIT(TCCR0B, FOC0A);
-
+		// Interrupt configuration
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, TOIE0);
 	}
@@ -45,18 +52,22 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 	/****************************************
 	 *				CTC MODE				*
 	 ****************************************/
-
+	/************************************************************************
+	 * Waveform generation bits 00 and 02 are cleared while 01 is set		*
+	 * Setting Force output compare bit for non PWM modes					*
+	 * Configuring the operation of OC0A pin								*
+	 * Loading the OCRx register with the required compare value			*
+	 * Setting OCIE0A bit in case the configuration required the interrupt	*
+	 ************************************************************************/
 	else if(TIMER0_CONFIGURATION_PTR->mode ==CTC_MODE)
 	{
-
-		// RESETTING CONTROL REGISTERS
-		TCCR0A=0;
-		TCCR0B = 0;
-		SET_BIT(TCCR0A, WGM01);							// SET WAVEFORM GENERATION TO CTC MDOE
-		SET_BIT(TCCR0B, FOC0A);							// SETTING FOC0A DURING NON PWM MODE
-		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
-		TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode; 	// OCR0A pin mode
-
+		// Setting Waveform Generation Mode and Compare Output Mode bits
+		SET_BIT(TCCR0A, WGM01);SET_BIT(TCCR0B, FOC0A);
+		// Load the OCRx register with the compare ticks
+		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
+		// Set the operation of OCx pin
+		TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode;
+		// Interrupt configuration
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
 			SET_BIT(TIMSK0, OCIE0A);
 	}
@@ -64,11 +75,15 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 	/****************************************
 	 *				PWM MODE				*
 	 ****************************************/
-
+	/************************************************************************
+	 * Waveform generation bits 00 and 02 are cleared while 01 is set		*
+	 * Setting Force output compare bit for non PWM modes					*
+	 * Configuring the operation of OC0A pin								*
+	 * Loading the OCRx register with the required compare value			*
+	 * Setting OCIE0A bit in case the configuration required the interrupt	*
+	 ************************************************************************/
 	else if(TIMER0_CONFIGURATION_PTR->mode ==FAST_PWM_MODE)
 	{
-		TCCR0A=0;
-		TCCR0B=0;
 		SET_BIT(TCCR0A, WGM00); SET_BIT(TCCR0A, WGM01); SET_BIT(TCCR0B, WGM02);
 		if(TIMER0_CONFIGURATION_PTR->compare_time > 100)
 			OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
