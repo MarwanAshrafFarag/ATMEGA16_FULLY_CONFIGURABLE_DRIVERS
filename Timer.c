@@ -25,9 +25,8 @@ void (*g_callBackPtr)(void) = NULL_PTR;
 void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 {
 	/* RESETTING The control and interrupt bits before configuring */
-	TCCR0A = 0;
-	TCCR0B = 0;
-	TIMSK0 = 0;
+	TCCR0 = 0;
+	TIMSK = 0;
 
 	/****************************************
 	 *			NORMAL OVERFLOW MODE		*
@@ -43,10 +42,25 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 	if(TIMER0_CONFIGURATION_PTR->mode == OVERFLOW_MODE)
 	{
 		// Setting Waveform Generation Mode and Compare Output Mode bits
-		SET_BIT(TCCR0B, FOC0A);
+		TCCR0 |= TIMER0_CONFIGURATION_PTR->mode;
 		// Interrupt configuration
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			SET_BIT(TIMSK0, TOIE0);
+			SET_BIT(TIMSK, TOIE0);
+	}
+
+	/****************************************
+	 *		  PHASE CORRECT PWM MODE		*
+	 ****************************************/
+	/************************************************************************
+	 * Waveform generation bits 00 and 02 are cleared while 01 is set		*
+	 * Setting Force output compare bit for non PWM modes					*
+	 * Configuring the operation of OC0A pin								*
+	 * Loading the OCRx register with the required compare value			*
+	 * Setting OCIE0A bit in case the configuration required the interrupt	*
+	 ************************************************************************/
+	else if(TIMER0_CONFIGURATION_PTR->mode == PWM_PHASE_CORRECT)
+	{
+
 	}
 
 	/****************************************
@@ -62,14 +76,14 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 	else if(TIMER0_CONFIGURATION_PTR->mode ==CTC_MODE)
 	{
 		// Setting Waveform Generation Mode and Compare Output Mode bits
-		SET_BIT(TCCR0A, WGM01);SET_BIT(TCCR0B, FOC0A);
+		SET_BIT(TCCR0, WGM01);SET_BIT(TCCR0, FOC0);
 		// Load the OCRx register with the compare ticks
-		OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;
+		OCR0 = TIMER0_CONFIGURATION_PTR->compare_time;
 		// Set the operation of OCx pin
-		TCCR0A|= TIMER0_CONFIGURATION_PTR->pin_mode;
+		TCCR0|= TIMER0_CONFIGURATION_PTR->pin_mode;
 		// Interrupt configuration
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			SET_BIT(TIMSK0, OCIE0A);
+			SET_BIT(TIMSK, OCIE0);
 	}
 
 	/****************************************
@@ -84,15 +98,15 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
 	 ************************************************************************/
 	else if(TIMER0_CONFIGURATION_PTR->mode ==FAST_PWM_MODE)
 	{
-		SET_BIT(TCCR0A, WGM00); SET_BIT(TCCR0A, WGM01); SET_BIT(TCCR0B, WGM02);
+		SET_BIT(TCCR0, WGM00); SET_BIT(TCCR0, WGM01);
 		if(TIMER0_CONFIGURATION_PTR->compare_time > 100)
-			OCR0A = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
+			OCR0 = TIMER0_CONFIGURATION_PTR->compare_time;	// The Compare ticks
 
 		else
-			OCR0A = (uint8)(((255)*(TIMER0_CONFIGURATION_PTR->compare_time))/100);
+			OCR0 = (uint8)(((255)*(TIMER0_CONFIGURATION_PTR->compare_time))/100);
 
 		if (TIMER0_CONFIGURATION_PTR->interrupt_select == ENABLE_INTERRUPT)
-			SET_BIT(TIMSK0, OCIE0A);
+			SET_BIT(TIMSK, OCIE0);
 	}
 
 
@@ -106,7 +120,7 @@ void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR)
  */
 void Timer0_start()
 {
-		TCCR0B |= clk_holder;
+		TCCR0 |= clk_holder;
 }
 
 
@@ -116,7 +130,7 @@ void Timer0_start()
  */
 void Timer0_stop(void)
 {
-	TCCR0B &= ~(0x07);
+	TCCR0 &= ~(0x07);
 }
 
 
@@ -127,7 +141,7 @@ void Timer0_stop(void)
  */
 uint8 Timer0_checkFlag(void)
 {
-	return TIFR0;
+	return TIFR;
 }
 
 /* Description:
@@ -136,7 +150,7 @@ uint8 Timer0_checkFlag(void)
  */
 void Timer0_clearFlag(void)
 {
-	TIFR0= 0x07;
+	TIFR= 0x07;
 }
 
 /* Description:
