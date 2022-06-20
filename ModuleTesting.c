@@ -5,8 +5,8 @@
 //#define OVERFLOW_MODE_INTERRUPT_DISABLED
 //#define OVERFLOW_MODE_INTERRUPT_ENABLED
 //#define CTC_MODE_TOGGLE_PIN
-//#define PWM_MODE_CLEAR
-#define PWM_MODE_SET
+//#define FAST_PWM_MODE_CLEAR
+#define PHASE_CORRECT_PWM_MODE_SET
 /****************************************
  * 										*
  *  OVERFLOW MODE, INTERRUPT DISABLED	*
@@ -19,7 +19,7 @@
 
 int main (void)
 {
-	TIMER0_CONFIGURATION Timer_configStr={OVERFLOW_MODE, DISABLE, 0,0,P1024, DISABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr={OVERFLOW, DISABLE, 0,0,P1024, DISABLE_INTERRUPT};
 	Timer0_init(&Timer_configStr);
 	static uint8 OVFcounter = 0;
 	Timer0_start();
@@ -61,7 +61,7 @@ ISR (TIMER0_OVF_vect)
 
 int main (void)
 {
-	TIMER0_CONFIGURATION Timer_configStr = {OVERFLOW_MODE, DISABLE, 0,0,P256, ENABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr = {OVERFLOW, DISABLE, 0,0,P256, ENABLE_INTERRUPT};
 	Timer0_init(&Timer_configStr);
 	sei();
 	Timer0_start();
@@ -91,7 +91,7 @@ ISR(TIMER0_COMPA_vect)
 
 int main(void)
 {
-	TIMER0_CONFIGURATION Timer_configStr={CTC_MODE, TOGGLE, 0,128,P8, ENABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr={CTC, TOGGLE, 0,128,P8, ENABLE_INTERRUPT};
 		Timer0_init(&Timer_configStr);
 		Timer0_start();
 		while(1)
@@ -102,11 +102,11 @@ int main(void)
 
 #endif //CTC_MODE_TOGGLE_PIN
 
-#ifdef PWM_MODE_CLEAR
+#ifdef FAST_PWM_MODE_CLEAR
 
 int main(void)
 {
-	TIMER0_CONFIGURATION Timer_configStr={FAST_PWM_MODE, CLEAR, 0,50,P64, DISABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr={FAST_PWM, CLEAR, 0,50,P64, DISABLE_INTERRUPT};
 		Timer0_init(&Timer_configStr);
 		Timer0_start();
 		while(1)
@@ -120,11 +120,11 @@ int main(void)
 
 
 
-#ifdef PWM_MODE_SET
+#ifdef PHASE_CORRECT_PWM_MODE_SET
 
 int main(void)
 {
-	TIMER0_CONFIGURATION Timer_configStr={FAST_PWM_MODE, SET, 0,75,P64, DISABLE_INTERRUPT};
+	TIMER0_CONFIGURATION Timer_configStr={FAST_PWM, SET, 0,75,P64, DISABLE_INTERRUPT};
 		Timer0_init(&Timer_configStr);
 		Timer0_start();
 		while(1)

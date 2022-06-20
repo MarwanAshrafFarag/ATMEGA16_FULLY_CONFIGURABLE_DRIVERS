@@ -11,14 +11,15 @@
 #define __OPTIMIZE__
 #define F_CPU 1000000UL
 
-
+/*STANDARD C LIBRARIES INCLUSIONS*/
 #include <stdio.h>
 
-#include <avr/io.h>		/* Include AVR std. library file */
+/*AVR LIBRARIES INCLUSIONS*/
+#include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>		/* Include Delay header file */
+#include <util/delay.h>
 
-
+/*SUPPORTING HEADER FILES INCULSIONS*/
 #include "Register_Macros.h"
 #include "std_types.h"
 

@@ -34,14 +34,14 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := ATMEGA16_CONFIGURABLE_DRIVERS
+BUILD_ARTIFACT_NAME := ATMEGA16_CONFIGURABLE_TIMER0_DRIVER
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 LSS += \
-ATMEGA16_CONFIGURABLE_DRIVERS.lss \
+ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.lss \
 
 SIZEDUMMY += \
 sizedummy \
@@ -51,31 +51,31 @@ sizedummy \
 all: main-build
 
 # Main-build Target
-main-build: ATMEGA16_CONFIGURABLE_DRIVERS.elf secondary-outputs
+main-build: ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf secondary-outputs
 
 # Tool invocations
-ATMEGA16_CONFIGURABLE_DRIVERS.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,ATMEGA16_CONFIGURABLE_DRIVERS.map -mmcu=atmega16 -o "ATMEGA16_CONFIGURABLE_DRIVERS.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.map -mmcu=atmega16 -o "ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-ATMEGA16_CONFIGURABLE_DRIVERS.lss: ATMEGA16_CONFIGURABLE_DRIVERS.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.lss: ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Invoking: AVR Create Extended Listing'
-	-avr-objdump -h -S ATMEGA16_CONFIGURABLE_DRIVERS.elf  >"ATMEGA16_CONFIGURABLE_DRIVERS.lss"
+	-avr-objdump -h -S ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf  >"ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.lss"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-sizedummy: ATMEGA16_CONFIGURABLE_DRIVERS.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+sizedummy: ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega16 ATMEGA16_CONFIGURABLE_DRIVERS.elf
+	-avr-size --format=avr --mcu=atmega16 ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(ELFS)$(OBJS)$(ASM_DEPS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) ATMEGA16_CONFIGURABLE_DRIVERS.elf
+	-$(RM) $(ELFS)$(OBJS)$(ASM_DEPS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) ATMEGA16_CONFIGURABLE_TIMER0_DRIVER.elf
 	-@echo ' '
 
 secondary-outputs: $(LSS) $(SIZEDUMMY)

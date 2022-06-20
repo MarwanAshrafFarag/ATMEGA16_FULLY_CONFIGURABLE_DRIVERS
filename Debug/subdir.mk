@@ -4,17 +4,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../GPIO.c \
 ../ModuleTesting.c \
 ../Timer.c 
 
 OBJS += \
-./GPIO.o \
 ./ModuleTesting.o \
 ./Timer.o 
 
 C_DEPS += \
-./GPIO.d \
 ./ModuleTesting.d \
 ./Timer.d 
 

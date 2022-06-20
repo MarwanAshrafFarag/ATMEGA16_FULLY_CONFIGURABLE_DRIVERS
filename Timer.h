@@ -1,5 +1,6 @@
-/*
- * Timer.h
+/* Module: ATMEGA 16 Timers
+ * File: Timer.h
+ * Description: Header file for declaring the function used in the driver
  *
  *  Created on: Jun 8, 2022
  *      Author: Marwan Ashraf Farag
@@ -15,14 +16,13 @@
 
 #include "CPU.h"
 
-
 /*******************************************************************************
  *                          	  Type Declaration                             *
  *******************************************************************************/
 
 /**TIMER MODES**/
 typedef enum{
-	OVERFLOW_MODE=0x80, PWM_PHASE_CORRECT=0xC0, CTC_MODE=0x88, FAST_PWM_MODE=0xC8
+	OVERFLOW=0x80, PWM_PHASE_CORRECT=0x40, CTC=0x88, FAST_PWM=0x48
 }TIMER0_MODE;
 
 
@@ -70,43 +70,44 @@ static volatile CLOCK_SOURCE clk_holder = 0;
  *                          Function Definitions                               *
  *******************************************************************************/
 
-/* Description:
- * Function to configure the use of TIMER0A
- * Its argument is pointer to the configuration structure that has 5 members
- * the function returns nothing
- * It only sets the appropriate bits in the timer registers based on the user configurations
- *  Function doesnt start the timer
- */
+/* **********************************************************
+ * Description: Function to configure the use of TIMER0 	*
+ * Arguments: Pointer to the TIMER0_CONFIGURATION structure *
+ * Return: Function returns nothing							*
+ ************************************************************/
 void Timer0_init (TIMER0_CONFIGURATION *TIMER0_CONFIGURATION_PTR);
 
-/* Description:
- *Function to start the timer by setting the appropriate clock source
- *Returns nothing as it only sets the appropriate bits
- */
 
+/* **********************************************************
+ * Description: Set the clock source to start the timer	*
+ * Arguments: VOID											*
+ * Return: Function returns nothing							*
+ ************************************************************/
 void Timer0_start();
-/* Description:
- * Function to use in case of polling
- * Returns the status of the interrupt flag register
- */
-uint8 Timer0_checkFlag(void);
 
-/* Description:
- *Clears the interrupt flags by setting them to 1
- *
- */
-void Timer0_clearFlag(void);
 
-/* Description:
- * Stops the timer by clearing the appropriate clock select bits
- *
- */
+/* **********************************************************
+ * Description: Clear the clock source to stop the timer	*
+ * Arguments: VOID											*
+ * Return: Function returns nothing							*
+ ************************************************************/
 void Timer0_stop(void);
 
-/* Description:
- *Sets the callback pointer to function
- *
- */
-void TIMER0_setCallBack(void(*a_ptr)(void));
+
+/* **********************************************************
+ * Description: Check the flag to use in polling			*
+ * Arguments: VOID											*
+ * Return: Function returns the status of the flag register	*
+ ************************************************************/
+uint8 Timer0_checkFlag(void);
+
+
+/* **********************************************************
+ * Description: clears the interrupt flag manually			*
+ * Arguments: VOID											*
+ * Return: Function returns nothing							*
+ ************************************************************/
+void Timer0_clearFlag(void);
+
 
 #endif /* TIMER_H_ */
